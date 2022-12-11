@@ -1,48 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="calc"> 
-        <section class="screen">
-           0
-        </section>
-<section class="calc-buttons"> <!--.calc-row*4>button.calc-button*4-->
-    <div class="calc-row">
-        <button class="double calc-button">C</button>
-        <button class="calc-button">⬅</button>
-        <button class="calc-button">/</button>
-    </div>
-    <div class="calc-row">
-        <button class="calc-button">7</button>
-        <button class="calc-button">8</button>
-        <button class="calc-button">9</button>
-        <button class="calc-button">x</button>
-    </div>
-    <div class="calc-row">
-        <button class="calc-button">4</button>
-        <button class="calc-button">5</button>
-        <button class="calc-button">6</button>
-        <button class="calc-button">-</button>
-    </div>
-    <div class="calc-row">
-        <button class="calc-button">1</button>
-        <button class="calc-button">2</button>
-        <button class="calc-button">3</button>
-        <button class="calc-button">+</button>
-    </div>
-    <div class="calc-row">
-        <button class="triple calc-button">0</button>
-        <button class="calc-button">=</button>
-
-    </div>
-</section>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="calc">
+      <div class="logo">CalcQulaTORRO</div>
+      <div class="panel">
+        <div class="upSide">
+            <div class="functionMark"></div>
+            <div class="buffor">0</div>
+        </div>
+        <div class="side-buffor"></div>
+      </div>
+      <div class="clear-tabs">
+        <button class="clear-butt bAC">AC</button>
+        <button class="clear-butt arrow">&#129044</button>
+      </div>
+      <div class="tabs">
+        <div class="digit">
+          <div class="row">
+            <button class="butt1" id="b9">9</button>
+            <button class="butt1" id="b8">8</button>
+            <button class="butt1" id="b7">7</button>
+          </div>
+          <div class="row">
+            <button class="butt1" id="b6">6</button>
+            <button class="butt1" id="b5">5</button>
+            <button class="butt1" id="b4">4</button>
+          </div>
+          <div class="row">
+            <button class="butt1" id="b3">3</button>
+            <button class="butt1" id="b2">2</button>
+            <button class="butt1" id="b1">1</button>
+          </div>
+          <div class="row">
+            <button class="butt1" id="bDot">.</button>
+            <button class="butt1" id="b0">0</button>
+            <button class="buttF" id="bEqual">=</button>
+          </div>
+        </div>
+        <div class="functional">
+          <button class="buttF" id="bShare">/</button>
+          <button class="buttF" id="bmulti">*</button>
+          <button class="buttF" id="bMinus">-</button>
+          <button class="buttF" id="bPlus">+</button>
+        </div>
+      </div>
     </div>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
