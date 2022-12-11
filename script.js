@@ -1,103 +1,256 @@
-let runningTotal = 0; /*bierząca suma dla screena */
-let buffer = "0"; /*buffor jako wciśnięty przycisk*/
-let previousOperator =
-  null; /*do zapamiętania co było kliknięte,w fazie początkowej ma watość null czyli 'pusty' */
-const screen =
-  document.querySelector(
-    ".screen"
-  ); /*jako 'screen' w funkcjach przyjmij selector 'class = screen'*/
+console.log("connected");
 
-document
-  .querySelector(".calc-buttons")
-  .addEventListener("click", function (event) {
-    buttonClick(event.target.innerText);
-  }); /*dodaje dla 'calc-buttons' selector który uruchamia funkcję 'button-click'*/
+window.onload = init();
 
-function buttonClick(value) {
-  if (isNaN(parseInt(value))) {
-    handleSymbol(value);
+function init() {
+  console.log("init start");
+}
+
+let func = "";
+
+let side = document.querySelector(".side-buffor");
+let buff = document.querySelector(".buffor");
+let funcMark = document.querySelector(".functionMark");
+
+let b9 = document.querySelector("#b9");
+b9.addEventListener("click", () => {
+  push(b9);
+});
+let b8 = document.querySelector("#b8");
+b8.addEventListener("click", () => {
+  push(b8);
+});
+let b7 = document.querySelector("#b7");
+b7.addEventListener("click", () => {
+  push(b7);
+});
+let b6 = document.querySelector("#b6");
+b6.addEventListener("click", () => {
+  push(b6);
+});
+let b5 = document.querySelector("#b5");
+b5.addEventListener("click", () => {
+  push(b5);
+});
+let b4 = document.querySelector("#b4");
+b4.addEventListener("click", () => {
+  push(b4);
+});
+let b3 = document.querySelector("#b3");
+b3.addEventListener("click", () => {
+  push(b3);
+});
+let b2 = document.querySelector("#b2");
+b2.addEventListener("click", () => {
+  push(b2);
+});
+let b1 = document.querySelector("#b1");
+b1.addEventListener("click", () => {
+  push(b1);
+});
+let b0 = document.querySelector("#b0");
+b0.addEventListener("click", () => {
+  if (side.innerText == "") {
   } else {
-    handleNumber(value);
+    push(b0);
   }
-  rerender(); /*odśwież*/
-} /*'NaN' Not a Number - funkcja sprawdza czy wartość na przycisku jest numerem czy nie i w dwóch przypadkach używa funkcji symbol albo numer*/
+});
 
-function handleNumber(value) {
-  if (buffer === "0") {
-    buffer = value;
+// function pads
+
+let bAC = document.querySelector(".bAC");
+bAC.addEventListener("click", () => {
+  allClear();
+});
+
+let del = document.querySelector(".arrow");
+del.addEventListener("click", () => {
+  side.innerText = side.innerText.slice(0, -1);
+});
+
+let bEqual = document.querySelector("#bEqual");
+bEqual.addEventListener("click", () => {
+  if (buff.innerText === "0") {
+    buff.innerText = side.innerText;
+
+    clearSide();
   } else {
-    buffer += value;
+    equal();
+    clearSide();
+    clearFunc();
   }
-} /*funkcja sprawdza czy buffor jest równy 0 i jeśli tak to go zamienia na wartość a jeśli nie to dostawia do niego kolejna liczbę*/
+});
 
-function handleSymbol(value) {
-  switch (value) {
-    case "C" /*w przypadku gdy wciśniesz 'C' */:
-      buffer = "0"; /*buffor się wyzeruje */
-      runningTotal = 0; /* bierząca suma przyjmie wartość 0*/
-      previousOperator =
-        null; /*informacja o poprzednim operatorze się skasuje*/
-      break;
-    case "=" /* w przypadku '=' */:
-      if (previousOperator === null) {
-        return; /*w poprzednim operatorze nic nie ma to nic nie rób :)*/
-      }
-      flushOperation(parseInt(buffer));
-      previousOperator = null; /*wywala poprzeni operator*/
-      buffer =
-        "" +
-        runningTotal; /*powiązanie stringów , bierząca suma staje się stringiem*/
-      runningTotal = 0; /*bierząca suma jest wyzerowana żeby nie wpływała na wynik buffora*/
-      break;
-    case "⬅":
-      if (buffer.length === 1) {
-        /*jeśli długość buffora wynosi 1 czyli jak jest jedna liczba*/
-        buffer = "0"; /*to buffor zmieni się na 0*/
-      } else {
-        /*w przeciwnym razie*/
-        buffer = buffer.substring(
-          0,
-          buffer.length - 1
-        ); /*podciągnij (substring) długośc buffora o -1 czyli zabierz jedną liczbę*/
-      }
-      break;
-    default:
-      handleMath(value);
-      break;
+let bAdd = document.querySelector("#bPlus");
+bAdd.addEventListener("click", () => {
+  if (buff.innerText == "0" && side.innerText == "") {
+    funcMark.innerText = "+";
+  } else if (buff.innerText == "0") {
+    moveBuff();
+    funcMark.innerText = "+";
+    clearSide();
+  } else if (side.innerText == "") {
+    funcMark.innerText = "+";
+  } else {
+    add();
+  }
+});
+
+let bSubtract = document.querySelector("#bMinus");
+bSubtract.addEventListener("click", () => {
+  if (buff.innerText == "0" && side.innerText == "") {
+    funcMark.innerText = "-";
+  } else if (buff.innerText == "0") {
+    moveBuff();
+    funcMark.innerText = "-";
+    clearSide();
+  } else if (side.innerText == "") {
+    funcMark.innerText = "-";
+  } else {
+    subtract();
+  }
+});
+
+let bMultiply = document.querySelector("#bmulti");
+bMultiply.addEventListener("click", () => {
+  if (buff.innerText == "0" && side.innerText == "") {
+    funcMark.innerText = "*";
+  } else if (buff.innerText == "0") {
+    moveBuff();
+    funcMark.innerText = "*";
+    clearSide();
+  } else if (side.innerText == "") {
+    funcMark.innerText = "*";
+  } else {
+    multiply();
+  }
+});
+
+let bShare = document.querySelector("#bShare");
+bShare.addEventListener("click", () => {
+  if (buff.innerText == "0" && side.innerText == "") {
+    funcMark.innerText = "/";
+  } else if (buff.innerText == "0") {
+    moveBuff();
+    funcMark.innerText = "/";
+    clearSide();
+  } else if (side.innerText == "") {
+    funcMark.innerText = "/";
+  } else {
+    share();
+  }
+});
+
+let bDot = document.querySelector("#bDot");
+bDot.addEventListener("click", () => {
+  let buffValue = Number(side.innerText);
+  let lastLet = side.innerText.substr(-1);
+  if (lastLet == ".") {
+    return;
+  }
+  if (Number.isInteger(buffValue) == true) {
+    side.innerText += bDot.innerText;
+  }
+});
+
+// functions
+
+function allClear() {
+  buff.innerText = "0";
+  clearSide();
+  clearFunc();
+}
+
+function clearSide() {
+  side.innerText = "";
+}
+
+function clearFunc() {
+  funcMark.innerText = "";
+}
+
+function moveBuff() {
+  if (buff.innerText == "0") {
+    buff.innerText = side.innerText;
   }
 }
 
-function handleMath(value) {
-  const intBuffer = parseInt(buffer); /*wymuś zamianę buffora na int */
-  if (runningTotal === 0) {
-    /*jeśli bierząca suma wynosi 0*/
-    runningTotal = intBuffer; /* zamień ją na int buffora */
-  } else {
-    /* w przeciwnym razie*/
-    flushOperation(
-      intBuffer
-    ); /*jeśli suma bierząca ma wartość, wykonaj fukncję flushOperation*/
+function checkFunc() {
+  if (funcMark.innerText !== "") {
+    return;
   }
-
-  previousOperator = value;
-
-  buffer =
-    "0"; /*buffor ustawia się na zero aby pobrać wartość drugiej liczby która będzie wpisywana*/
 }
 
-function flushOperation(intBuffer) {
-  /*spłucz operacje */
-  if (previousOperator === "+") {
-    runningTotal += intBuffer;
-  } else if (previousOperator === "-") {
-    runningTotal -= intBuffer;
-  } else if (previousOperator === "x") {
-    runningTotal *= intBuffer;
+function cutToTen() {
+  if (buff.innerText.length > 10) {
+    buff.innerText = "Too big";
   } else {
-    runningTotal /= intBuffer;
+    clearFunc();
   }
-} /*w przypadku gdy operator przyjmuje wartość z wyżej podanych to suma bierząca poddana jest działaniu z buforem*/
+} ///////////////////////////////////////////////// tutaj
 
-function rerender() {
-  screen.innerText = buffer;
-} /*funkcja wrzuca w screen buffor*/
+function push(e) {
+  if (side.innerText.length > 10) {
+    return;
+  } else {
+    side.innerText += e.innerText;
+  }
+}
+function scope() {}
+
+function add() {
+  buff.innerText = Number(side.innerText) + Number(buff.innerText);
+  cutToTen();
+  clearSide();
+}
+function subtract() {
+  buff.innerText = Number(buff.innerText) - Number(side.innerText);
+  console.log(buff.innerText);
+  cutToTen();
+  clearSide();
+}
+
+function multiply() {
+  buff.innerText = Number(buff.innerText) * Number(side.innerText);
+  console.log(buff.innerText);
+  cutToTen();
+  clearSide();
+}
+
+function share() {
+  buff.innerText = Number(buff.innerText) / Number(side.innerText);
+  cutToTen();
+  clearSide();
+}
+
+function equal() {
+  switch (funcMark.innerText) {
+    case "":
+      {
+        moveBuff();
+      }
+      break;
+    case "+":
+      {
+        add();
+      }
+      break;
+    case "-":
+      {
+        subtract();
+      }
+      break;
+    case "*":
+      {
+        multiply();
+      }
+      break;
+    case "/":
+      {
+        share();
+      }
+      break;
+    default: {
+    }
+  }
+}
